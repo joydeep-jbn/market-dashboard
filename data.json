@@ -1,6 +1,6 @@
 {
   "meta": {
-    "fetched_at": "2026-03-20T10:21:39.911282",
+    "fetched_at": "2026-03-20T11:02:08.972448",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
@@ -51,10 +51,10 @@
     }
   },
   "macro": {
-    "brent_usd": 106.21,
+    "brent_usd": 105.33,
     "us10y_yield": 4.28,
     "dxy": null,
-    "usdinr": 93.72,
+    "usdinr": 93.57,
     "fii_today_cr": 0.0,
     "dii_today_cr": 0.0,
     "fii_30d_cr": 0.0,
