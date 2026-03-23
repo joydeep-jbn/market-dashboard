@@ -432,9 +432,36 @@ async function loadLiveData(){
 }
 
 function simulate(){randomState();render();}
-randomState();render();
+
+function showLoading(){
+  var ids=["bs-num","bs-label","nifty-lv","dd-ath","dd-52","vix-v","dma-v","pe-v","pe-vs",
+    "ad-v","s50-v","hl-v","mom-v","pcr-v","mp-v","oil-v","yld-v","dxy-v","inr-v",
+    "fii-v","dii-v","f30-v","eps-v","sp-score","sp-action","sp-sub","sp-cap","deploy-v"];
+  ids.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="--";});
+  setText("bs-label","Loading...");
+  setText("bs-sub","Fetching live market data");
+  var big=document.getElementById("big-status");
+  if(big)big.setAttribute("style","background:#f8f8f6;border-color:#ccc;margin:10px 14px;border-radius:12px;padding:13px 16px;border:0.5px solid;display:flex;align-items:center;justify-content:space-between;");
+  var badge=document.getElementById("live-badge");
+  if(badge){badge.textContent="LOADING";badge.style.color="#BA7517";badge.style.borderColor="#BA7517";}
+  setText("last-upd","Fetching live data...");
+}
+
+async function initDashboard(){
+  showLoading();
+  try{
+    await loadLiveData();
+  }catch(e){
+    console.warn("Live data failed, using demo:",e);
+    randomState();
+    render();
+    var badge=document.getElementById("live-badge");
+    if(badge){badge.textContent="DEMO";badge.style.color="#BA7517";badge.style.borderColor="#BA7517";}
+  }
+}
+
 setInterval(loadLiveData,5*60*1000);
-loadLiveData();
+initDashboard();
 </script>
 </body>
 </html>
