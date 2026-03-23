@@ -462,13 +462,13 @@ function showLoading(){
     "ad-v","s50-v","hl-v","mom-v","pcr-v","mp-v","oil-v","yld-v","dxy-v","inr-v",
     "fii-v","dii-v","f30-v","eps-v","sp-score","sp-action","sp-sub","sp-cap","deploy-v"];
   ids.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="--";});
-  setText("bs-label","Loading...");
-  setText("bs-sub","Fetching live market data");
+  var _e=document.getElementById("bs-label");if(_e)_e.textContent="Loading...";
+  var _e=document.getElementById("bs-sub");if(_e)_e.textContent="Fetching live market data";
   var big=document.getElementById("big-status");
   if(big)big.setAttribute("style","background:#f8f8f6;border-color:#ccc;margin:10px 14px;border-radius:12px;padding:13px 16px;border:0.5px solid;display:flex;align-items:center;justify-content:space-between;");
   var badge=document.getElementById("live-badge");
   if(badge){badge.textContent="LOADING";badge.style.color="#BA7517";badge.style.borderColor="#BA7517";}
-  setText("last-upd","Fetching live data...");
+  var _e=document.getElementById("last-upd");if(_e)_e.textContent="Fetching live data...";
 }
 
 async function initDashboard(){
