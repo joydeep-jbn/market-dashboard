@@ -169,19 +169,34 @@ def fetch_nifty_pe(session):
     except Exception as e:
         print(f"    [warn] PE NSE: {e}")
     try:
-        print("    PE fallback: computing from top 15 Nifty stocks...")
+        print("    PE fallback: computing from top Nifty stocks...")
         symbols = [
-            "RELIANCE.NS","TCS.NS","HDFCBANK.NS","ICICIBANK.NS","INFOSYS.NS",
+            "RELIANCE.NS","TCS.NS","HDFCBANK.NS","ICICIBANK.NS",
             "BHARTIARTL.NS","SBIN.NS","HINDUNILVR.NS","ITC.NS","LT.NS",
             "BAJFINANCE.NS","HCLTECH.NS","MARUTI.NS","SUNPHARMA.NS","TITAN.NS",
+            "KOTAKBANK.NS","AXISBANK.NS","WIPRO.NS","NESTLEIND.NS","ULTRACEMCO.NS",
         ]
         pe_values = []
         for sym in symbols:
             try:
-                info = yf.Ticker(sym).fast_info
-                pe   = getattr(info, "pe_ratio", None)
-                if pe and 5 < float(pe) < 120:
+                t = yf.Ticker(sym)
+                # Try multiple PE sources
+                pe = None
+                try:
+                    h = t.history(period="1d")
+                    if not h.empty:
+                        info = t.info
+                        pe = info.get("trailingPE") or info.get("forwardPE")
+                except Exception:
+                    pass
+                if not pe:
+                    try:
+                        pe = getattr(t.fast_info, "pe_ratio", None)
+                    except Exception:
+                        pass
+                if pe and 5 < float(pe) < 150:
                     pe_values.append(float(pe))
+                    print(f"      {sym}: {float(pe):.1f}x")
             except Exception:
                 pass
         if pe_values:
@@ -390,7 +405,7 @@ def fetch_macro():
     tickers = {
         "brent_usd":   "BZ=F",    # Brent Crude Futures
         "us10y_yield": "^TNX",    # US 10-Year Treasury Yield
-        "dxy":         "DX=F",    # Dollar Index Futures — FIXED ticker
+        "dxy":         "DX-Y.NYB",  # Dollar Index — primary ticker
         "usdinr":      "INR=X",   # USD/INR
     }
     for key, ticker in tickers.items():
@@ -402,6 +417,18 @@ def fetch_macro():
                 print(f"    {key}: {val}")
         except Exception as e:
             print(f"    [warn] {key}: {e}")
+    # DXY fallback — try multiple tickers if primary fails
+    if not macro.get("dxy"):
+        for dxy_ticker in ["DX=F", "UUP", "^DXY"]:
+            try:
+                h = yf.Ticker(dxy_ticker).history(period="5d", interval="1d")
+                if not h.empty:
+                    macro["dxy"] = round(float(h["Close"].iloc[-1]), 2)
+                    print(f"    dxy (fallback {dxy_ticker}): {macro['dxy']}")
+                    break
+            except Exception:
+                pass
+
     return macro
 
 

@@ -425,10 +425,33 @@ async function loadLiveData(){
     S.dma50_val=st.nifty50?.dma50??S.dma50_val;
     S.oil=m.brent_usd??S.oil;S.yld=m.us10y_yield??S.yld;S.dxy=m.dxy??S.dxy;S.inr=m.usdinr??S.inr;
     S.fii=m.fii_today_cr??S.fii;S.dii=m.dii_today_cr??S.dii;S.fii30=m.fii_30d_cr??S.fii30;S.eps=m.eps_trend??S.eps;
+    // Map recovery section from data.json
+    var r=d.recovery||{};
+    if(r.recent_low) S.recent_low=r.recent_low;
+    if(r.rally_from_low_pct!==null&&r.rally_from_low_pct!==undefined) S.rally_pct=r.rally_from_low_pct;
+    if(r.higher_low!==null&&r.higher_low!==undefined) S.higher_low=r.higher_low;
+    if(r.vix_trend) S.vix_trend=r.vix_trend;
+    if(r.vix_peak) S.vix_peak=r.vix_peak;
+    if(r.rsi_weekly!==null&&r.rsi_weekly!==undefined) S.rsi_weekly=r.rsi_weekly;
+    if(r.breadth_up_days!==null&&r.breadth_up_days!==undefined) S.breadth_up_days=r.breadth_up_days;
+    // Derive prev_low from higher_low boolean for calcRec()
+    // If higher_low=true: prev_low < recent_low (bullish)
+    // If higher_low=false: prev_low > recent_low (bearish)
+    if(r.higher_low===true) S.prev_low=S.recent_low*0.99;
+    else if(r.higher_low===false) S.prev_low=S.recent_low*1.01;
+    // RSI prev — set slightly lower so RSI rising check works naturally
+    S.rsi_prev=S.rsi_weekly-2;
     render();
     var badge=document.getElementById('live-badge');badge.textContent='LIVE';badge.style.color='#1D9E75';badge.style.borderColor='#1D9E75';
     if(d.meta?.fetched_at){var dt=new Date(d.meta.fetched_at);document.getElementById('last-upd').textContent='Live · '+dt.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
-  }catch(e){console.warn('No live data:',e.message);}
+  }catch(e){
+    console.warn('No live data:',e.message);
+    randomState();
+    render();
+    var badge=document.getElementById('live-badge');
+    if(badge){badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';}
+    setText('last-upd','Demo mode — data.json not found');
+  }
 }
 
 function simulate(){randomState();render();}
