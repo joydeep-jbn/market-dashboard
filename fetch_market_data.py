@@ -112,8 +112,10 @@ def fetch_index_data():
             dd_ath   = round(abs(pct_from(current, ath)), 2)
             dd_52w   = round(abs(pct_from(current, w52_high)), 2)
             closes   = hist["Close"]
-            dma200   = round(float(closes.tail(200).mean()), 2) if len(closes) >= 200 else None
-            dma50    = round(float(closes.tail(50).mean()),  2) if len(closes) >= 50  else None
+            # Use available data for DMA — some indices have shorter history
+            dma200   = round(float(closes.tail(200).mean()), 2) if len(closes) >= 150 else (
+                       round(float(closes.mean()), 2) if len(closes) >= 50 else None)
+            dma50    = round(float(closes.tail(50).mean()),  2) if len(closes) >= 40  else None
             dist_200 = round(pct_from(current, dma200), 2) if dma200 else None
             dist_50  = round(pct_from(current, dma50),  2) if dma50  else None
             result[name] = {
@@ -362,12 +364,54 @@ def fetch_fii_dii(session):
         rows = rows if isinstance(rows, list) else rows.get("data", [])
         if rows:
             latest = rows[0]
-            result["fii_today_cr"] = round(float(latest.get("FII_NET", 0)) / 1e7, 2)
-            result["dii_today_cr"] = round(float(latest.get("DII_NET", 0)) / 1e7, 2)
-            result["fii_30d_cr"]   = round(
-                sum(float(r.get("FII_NET", 0)) for r in rows[:30]) / 1e7, 2)
-            print(f"    FII (NSE): ₹{result['fii_today_cr']} Cr  30D: ₹{result['fii_30d_cr']} Cr")
-            return result
+            print(f"    FII raw keys: {list(latest.keys())[:8]}")
+            # Try multiple possible field names
+            fii_keys = ["FII_NET","fiiNet","fii_net","NET_VALUE","netVal","FII Net"]
+            dii_keys = ["DII_NET","diiNet","dii_net","DII Net"]
+            fii_val = None
+            dii_val = None
+            for k in fii_keys:
+                v = latest.get(k)
+                if v is not None and v != "":
+                    try:
+                        fii_val = float(str(v).replace(",",""))
+                        break
+                    except Exception:
+                        pass
+            for k in dii_keys:
+                v = latest.get(k)
+                if v is not None and v != "":
+                    try:
+                        dii_val = float(str(v).replace(",",""))
+                        break
+                    except Exception:
+                        pass
+            if fii_val is not None:
+                # Check if value needs crore conversion (if >10000 it is in lakhs/units)
+                if abs(fii_val) > 10000:
+                    fii_val = round(fii_val / 1e7, 2)
+                    dii_val = round(dii_val / 1e7, 2) if dii_val else None
+                else:
+                    fii_val = round(fii_val, 2)
+                    dii_val = round(dii_val, 2) if dii_val else None
+                result["fii_today_cr"] = fii_val
+                result["dii_today_cr"] = dii_val
+                fii_30d = 0
+                for row in rows[:30]:
+                    for k in fii_keys:
+                        v = row.get(k)
+                        if v is not None:
+                            try:
+                                val = float(str(v).replace(",",""))
+                                fii_30d += val
+                                break
+                            except Exception:
+                                pass
+                if abs(fii_30d) > 10000:
+                    fii_30d = fii_30d / 1e7
+                result["fii_30d_cr"] = round(fii_30d, 2)
+                print(f"    FII (NSE): ₹{fii_val} Cr  30D: ₹{result['fii_30d_cr']} Cr")
+                return result
     except Exception as e:
         print(f"    [warn] FII NSE: {e}")
 

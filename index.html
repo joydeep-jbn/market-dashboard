@@ -472,14 +472,26 @@ function showLoading(){
 
 async function initDashboard(){
   showLoading();
+  // Guaranteed fallback after 8 seconds — never stay stuck on Loading
+  var fallbackTimer=setTimeout(function(){
+    var badge=document.getElementById('live-badge');
+    if(badge&&badge.textContent==='LOADING'){
+      console.warn('Live data timeout — using demo');
+      randomState();render();
+      badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';
+      setText('last-upd','Demo mode — live data timeout');
+    }
+  },8000);
   try{
     await loadLiveData();
+    clearTimeout(fallbackTimer);
   }catch(e){
-    console.warn("Live data failed, using demo:",e);
-    randomState();
-    render();
-    var badge=document.getElementById("live-badge");
-    if(badge){badge.textContent="DEMO";badge.style.color="#BA7517";badge.style.borderColor="#BA7517";}
+    clearTimeout(fallbackTimer);
+    console.warn('Live data failed:',e);
+    randomState();render();
+    var badge=document.getElementById('live-badge');
+    if(badge){badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';}
+    setText('last-upd','Demo mode — data.json not found');
   }
 }
 
