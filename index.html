@@ -423,7 +423,7 @@ async function loadLiveData(){
     var mid=st.midcap150||{},sml=st.smallcap250||{};
     S.mid_ath=mid.dd_ath_pct??S.mid_ath;S.mid_52=mid.dd_52w_pct??S.mid_52;
     S.sml_ath=sml.dd_ath_pct??S.sml_ath;S.sml_52=sml.dd_52w_pct??S.sml_52;
-    S.dma50_val=st.nifty50?.dma50??S.dma50_val;
+    S.dma50_val=(st.nifty50&&st.nifty50.dma50)?st.nifty50.dma50:S.dma50_val;
     S.oil=m.brent_usd??S.oil;S.yld=m.us10y_yield??S.yld;S.dxy=m.dxy??S.dxy;S.inr=m.usdinr??S.inr;
     S.fii=m.fii_today_cr??S.fii;S.dii=m.dii_today_cr??S.dii;S.fii30=m.fii_30d_cr??S.fii30;S.eps=m.eps_trend??S.eps;
     // Map recovery section from data.json
@@ -442,9 +442,9 @@ async function loadLiveData(){
     else if(r.higher_low===false) S.prev_low=S.recent_low*1.01;
     // RSI prev — set slightly lower so RSI rising check works naturally
     S.rsi_prev=S.rsi_weekly-2;
-    render();
+    try{render();}catch(renderErr){console.warn('Render error:',renderErr);}
     var badge=document.getElementById('live-badge');badge.textContent='LIVE';badge.style.color='#1D9E75';badge.style.borderColor='#1D9E75';
-    if(d.meta?.fetched_at){var dt=new Date(d.meta.fetched_at);document.getElementById('last-upd').textContent='Live · '+dt.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
+    if(d.meta&&d.meta.fetched_at){var dt=new Date(d.meta.fetched_at);document.getElementById('last-upd').textContent='Live · '+dt.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
   }catch(e){
     console.warn('No live data:',e.message);
     randomState();
