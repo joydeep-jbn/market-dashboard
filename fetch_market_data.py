@@ -177,6 +177,7 @@ def fetch_nifty_pe(session):
             "BHARTIARTL.NS","SBIN.NS","HINDUNILVR.NS","ITC.NS","LT.NS",
             "BAJFINANCE.NS","HCLTECH.NS","MARUTI.NS","SUNPHARMA.NS","TITAN.NS",
             "KOTAKBANK.NS","AXISBANK.NS","WIPRO.NS","NESTLEIND.NS","ULTRACEMCO.NS",
+            "ADANIENT.NS","NTPC.NS","POWERGRID.NS","ONGC.NS","COALINDIA.NS",
         ]
         pe_values = []
         for sym in symbols:
