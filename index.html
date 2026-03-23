@@ -411,7 +411,8 @@ function render(){
 // Live data loader
 async function loadLiveData(){
   try{
-    const res=await fetch('data.json?t='+Date.now());
+    const base='https://joydeep-jbn.github.io/market-dashboard/';
+    const res=await fetch(base+'data.json?t='+Date.now());
     if(!res.ok)throw new Error('not found');
     const d=await res.json();
     const s=d.stress||{},b=d.breadth||{},st=d.structure||{},m=d.macro||{};
