@@ -1,16 +1,16 @@
 {
   "meta": {
-    "fetched_at": "2026-03-23T04:52:23.350347",
+    "fetched_at": "2026-03-23T04:57:42.487180",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
   },
   "stress": {
-    "nifty_level": 22549.8,
-    "dd_ath_pct": 14.5,
-    "dd_52w_pct": 14.5,
-    "vix": 26.16,
-    "dist_200dma_pct": -10.77,
+    "nifty_level": 22556.0,
+    "dd_ath_pct": 14.47,
+    "dd_52w_pct": 14.47,
+    "vix": 26.15,
+    "dist_200dma_pct": -10.75,
     "pe_ratio": null,
     "pe_10y_avg": 22.5,
     "pe_vs_avg_pct": null
@@ -22,46 +22,46 @@
     "pct_above_50dma": 15.4,
     "new_52w_highs": null,
     "new_52w_lows": null,
-    "momentum_gap_50dma": -9.91,
+    "momentum_gap_50dma": -9.88,
     "pcr": null,
     "max_pain": null,
     "options_expiry": null
   },
   "structure": {
     "nifty50": {
-      "level": 22549.8,
-      "dd_ath_pct": 14.5,
-      "dd_52w_pct": 14.5,
-      "dma200": 25272.25,
-      "dma50": 25029.39
+      "level": 22556.0,
+      "dd_ath_pct": 14.47,
+      "dd_52w_pct": 14.47,
+      "dma200": 25272.28,
+      "dma50": 25029.51
     },
     "midcap150": {
-      "level": 61578.85,
-      "dd_ath_pct": 20.97,
-      "dd_52w_pct": 13.07,
-      "dma200": 68219.08,
-      "dma50": 67922.97
+      "level": 61520.25,
+      "dd_ath_pct": 21.04,
+      "dd_52w_pct": 13.15,
+      "dma200": 68218.78,
+      "dma50": 67921.8
     },
     "smallcap250": {
-      "level": 15161.7,
-      "dd_ath_pct": 2.59,
-      "dd_52w_pct": 2.59,
+      "level": 15124.1,
+      "dd_ath_pct": 2.83,
+      "dd_52w_pct": 2.83,
       "dma200": null,
       "dma50": null
     }
   },
   "macro": {
-    "brent_usd": 108.03,
+    "brent_usd": 108.06,
     "us10y_yield": 4.39,
     "dxy": null,
-    "usdinr": 93.9,
+    "usdinr": 93.92,
     "fii_today_cr": null,
     "dii_today_cr": null,
     "fii_30d_cr": null,
     "eps_trend": "Stable"
   },
   "recovery": {
-    "recent_low": 22553.75,
+    "recent_low": 22552.05,
     "rally_from_low_pct": 0.0,
     "higher_low": false,
     "vix_trend": "Rising",
