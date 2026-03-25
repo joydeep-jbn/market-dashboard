@@ -253,26 +253,37 @@ function C(id,c){var e=document.getElementById(id);if(e)e.style.color=c;}
 function fmt(v,d){if(v==null)return'N/A';return(+v).toFixed(d!=null?d:1);}
 
 function scoreIt(){
-  var pts=0,items=[];
-  function add(n,v,mx,col){pts+=v;items.push({n,v,mx,col});}
-  var cl=confLvl(S.ath_dd,S.w52_dd);
-  var dd=cl===2?(S.ath_dd<8?0.8:S.ath_dd<12?1.4:S.ath_dd<18?1.8:2):cl===1?(S.ath_dd<12?0.5:1):0;
-  add('Drawdown (dual)',dd,2,dd>=1.5?'#E24B4A':dd>=0.8?'#BA7517':'#1D9E75');
-  var vp=S.vix<15?0:S.vix<20?0.5:S.vix<25?1.5:2;
-  add('India VIX',vp,2,vp>=1.5?'#E24B4A':vp>=0.5?'#BA7517':'#1D9E75');
-  var bp=(S.ad&&S.ad<0.4?0.5:0)+(S.s50&&S.s50<20?0.5:0);
-  add('Breadth collapse',bp,1,bp>=1?'#E24B4A':bp>=0.5?'#BA7517':'#1D9E75');
-  var sp=S.s50<20?1:S.s50<35?0.5:0;
-  add('Stocks below 50DMA',sp,1,sp>=1?'#E24B4A':sp>=0.5?'#BA7517':'#1D9E75');
-  var pp=S.pcr>1.8?1:S.pcr>1.3?0.5:0;
-  add('Put-Call Ratio',pp,1,pp>=1?'#E24B4A':pp>=0.5?'#BA7517':'#1D9E75');
-  var ep2=S.pe&&S.pe<18?1:S.pe&&S.pe<22?0.5:0;
-  add('PE valuation',ep2,1,S.pe&&S.pe<18?'#1D9E75':S.pe&&S.pe<22?'#BA7517':'#E24B4A');
-  var fp=S.fii30&&S.fii30<-15000?1:S.fii30&&S.fii30<-5000?0.5:0;
-  add('FII 30D outflow',fp,1,fp>=1?'#E24B4A':fp>=0.5?'#BA7517':'#1D9E75');
-  var ep=S.eps==='Upgrading'?1:S.eps==='Stable'?0.5:0;
-  add('EPS trend',ep,1,S.eps==='Upgrading'?'#1D9E75':S.eps==='Stable'?'#BA7517':'#E24B4A');
-  return{pts:Math.min(10,Math.max(0,Math.round(pts*10)/10)),items};
+  var pts=0, items=[];
+  function add(n,v,mx,col){pts+=v; items.push({n,v,mx,col});}
+
+  // A. Drawdown Logic (High Conviction for Long Term)
+  var cl = confLvl(S.ath_dd, S.w52_dd);
+  var dd = cl===2 ? (S.ath_dd < 10 ? 1.0 : S.ath_dd < 15 ? 1.5 : 2.5) : (cl===1 ? 0.7 : 0);
+  add('Drawdown Depth', dd, 2.5, dd >= 1.5 ? '#E24B4A' : '#BA7517');
+
+  // B. Fear Gauge (VIX) - INCREASED WEIGHT FOR HIGH RISK APPETITE
+  // Buying when VIX > 25 is historically the best time for MF units
+  var vp = S.vix < 16 ? 0 : S.vix < 21 ? 0.5 : S.vix < 26 ? 1.5 : 2.5;
+  add('Volatility (Fear)', vp, 2.5, vp >= 1.5 ? '#A32D2D' : '#BA7517');
+
+  // C. Structural Value (200-DMA)
+  // Being 10% below 200DMA is a rare "Generational" buy signal
+  var dmaP = S.dma200 < -10 ? 2.0 : S.dma200 < -5 ? 1.0 : S.dma200 < 0 ? 0.5 : 0;
+  add('Distance from 200DMA', dmaP, 2.0, dmaP >= 1.5 ? '#E24B4A' : '#1D9E75');
+
+  // D. Breadth Check (Broad Market Health)
+  var bp = (S.s50 && S.s50 < 20 ? 1.0 : S.s50 < 40 ? 0.5 : 0);
+  add('Broad Market Pain', bp, 1.0, bp >= 1 ? '#E24B4A' : '#1D9E75');
+
+  // E. Institutional Flow (FII Pressure)
+  var fp = S.fii30 && S.fii30 < -20000 ? 1.0 : S.fii30 < -10000 ? 0.5 : 0;
+  add('FII Exhaustion', fp, 1.0, fp >= 1 ? '#A32D2D' : '#BA7517');
+
+  // F. Valuation (PE Ratio)
+  var ep2 = S.pe && S.pe < 19 ? 1.0 : S.pe < 22 ? 0.5 : 0;
+  add('PE Value Opportunity', ep2, 1.0, S.pe < 20 ? '#1D9E75' : '#E24B4A');
+
+  return {pts: Math.min(10, Math.max(0, Math.round(pts*10)/10)), items};
 }
 
 function calcRec(){
