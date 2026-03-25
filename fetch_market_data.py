@@ -358,88 +358,45 @@ def fetch_fii_dii(session):
     print("  Fetching FII/DII flows...")
     result = {}
 
-    # Primary: NSE
+    # --- Step A: Primary NSE Fetch ---
     try:
-        r    = session.get("https://www.nseindia.com/api/fiidiiTradeReact", timeout=10)
+        r = session.get("https://www.nseindia.com/api/fiidiiTradeReact", timeout=10)
         rows = r.json()
-        rows = rows if isinstance(rows, list) else rows.get("data", [])
         if rows:
-            latest = rows[0]
-            print(f"    FII raw keys: {list(latest.keys())[:8]}")
-            # Try multiple possible field names
-            fii_keys = ["FII_NET","fiiNet","fii_net","NET_VALUE","netVal","FII Net"]
-            dii_keys = ["DII_NET","diiNet","dii_net","DII Net"]
-            fii_val = None
-            dii_val = None
-            for k in fii_keys:
-                v = latest.get(k)
-                if v is not None and v != "":
-                    try:
-                        fii_val = float(str(v).replace(",",""))
-                        break
-                    except Exception:
-                        pass
-            for k in dii_keys:
-                v = latest.get(k)
-                if v is not None and v != "":
-                    try:
-                        dii_val = float(str(v).replace(",",""))
-                        break
-                    except Exception:
-                        pass
-            if fii_val is not None:
-                # Check if value needs crore conversion (if >10000 it is in lakhs/units)
-                if abs(fii_val) > 10000:
-                    fii_val = round(fii_val / 1e7, 2)
-                    dii_val = round(dii_val / 1e7, 2) if dii_val else None
-                else:
-                    fii_val = round(fii_val, 2)
-                    dii_val = round(dii_val, 2) if dii_val else None
-                result["fii_today_cr"] = fii_val
-                result["dii_today_cr"] = dii_val
-                fii_30d = 0
-                for row in rows[:30]:
-                    for k in fii_keys:
-                        v = row.get(k)
-                        if v is not None:
-                            try:
-                                val = float(str(v).replace(",",""))
-                                fii_30d += val
-                                break
-                            except Exception:
-                                pass
-                if abs(fii_30d) > 10000:
-                    fii_30d = fii_30d / 1e7
-                result["fii_30d_cr"] = round(fii_30d, 2)
-                print(f"    FII (NSE): ₹{fii_val} Cr  30D: ₹{result['fii_30d_cr']} Cr")
-                return result
+            latest = rows
+            # Standardizing keys for NSE
+            fii_val = float(str(latest.get('fiiNet', 0)).replace(",",""))
+            dii_val = float(str(latest.get('diiNet', 0)).replace(",",""))
+            result["fii_today_cr"] = round(fii_val, 2)
+            result["dii_today_cr"] = round(dii_val, 2)
+            
+            # Calculate 30D Sum
+            fii_30d = sum([float(str(row.get('fiiNet', 0)).replace(",","")) for row in rows[:30]])
+            result["fii_30d_cr"] = round(fii_30d, 2)
+            print(f"    FII (NSE): ₹{fii_val} Cr")
+            return result
     except Exception as e:
-        print(f"    [warn] FII NSE: {e}")
+        print(f"    [warn] NSE FII Blocked: {e}")
 
-    # Fallback: Trendlyne
+    # --- Step B: Robust Moneycontrol Fallback ---
     try:
-        r2   = requests.get("https://trendlyne.com/macro/fii-dii-data/all/cash/",
-                            timeout=10, headers={"User-Agent": "Mozilla/5.0"})
-        soup = BeautifulSoup(r2.text, "lxml")
-        for row in soup.find_all("tr")[1:4]:
-            cells = row.find_all("td")
-            if len(cells) >= 4:
-                try:
-                    fii = float(cells[1].get_text().replace(",","").strip())
-                    dii = float(cells[3].get_text().replace(",","").strip())
-                    result["fii_today_cr"] = round(fii, 2)
-                    result["dii_today_cr"] = round(dii, 2)
-                    print(f"    FII (trendlyne): ₹{fii} Cr")
-                    break
-                except Exception:
-                    pass
+        print("    Attempting Moneycontrol Fallback...")
+        mc_url = "https://www.moneycontrol.com/stocks/marketstats/fii_dii_activity/index.php"
+        resp = requests.get(mc_url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+        # Use pandas to grab the first table on the page
+        df = pd.read_html(resp.text)
+        # Moneycontrol table: Column 1 is FII Net, Column 2 is DII Net
+        fii_mc = float(df.iloc)
+        dii_mc = float(df.iloc)
+        result["fii_today_cr"] = fii_mc
+        result["dii_today_cr"] = dii_mc
+        result["fii_30d_cr"] = round(fii_mc * 21, 2) # Statistical proxy if 30d history is blocked
+        print(f"    FII (Moneycontrol): ₹{fii_mc} Cr")
+        return result
     except Exception as e:
-        print(f"    [warn] FII trendlyne: {e}")
+        print(f"    [warn] All FII sources failed: {e}")
 
-    if result.get("fii_today_cr") and not result.get("fii_30d_cr"):
-        result["fii_30d_cr"] = round(result["fii_today_cr"] * 20, 2)
-
-    return result
+    return {"fii_today_cr": None, "dii_today_cr": None, "fii_30d_cr": None}
 
 
 # ── 7. MACRO DATA ───────────────────────────────────────────────────────────────
