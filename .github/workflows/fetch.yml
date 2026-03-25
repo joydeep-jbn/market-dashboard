@@ -38,6 +38,7 @@ jobs:
           else
             git pull --rebase origin main
             git commit -m "auto: update market data $(date -u +%Y-%m-%d\ %H:%M)"
-          git push origin main
+            git push origin main
+          fi  
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
