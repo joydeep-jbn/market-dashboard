@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>India Market Correction Dashboard v5</title>
+<title>India Market Correction Dashboard v6</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#f5f5f0;font-family:monospace;}
@@ -85,13 +85,48 @@ body{background:#f5f5f0;font-family:monospace;}
 .slbls2{display:flex;justify-content:space-between;font-size:9px;color:#999;margin-top:2px;}
 .note{margin:0 14px 6px;font-size:10px;color:#999;text-align:center;line-height:1.6;}
 .badge-live{font-size:10px;padding:2px 8px;border-radius:4px;border:0.5px solid #BA7517;color:#BA7517;}
+
+/* POWDER TRACKER */
+.powder-panel{margin:0 14px 9px;border-radius:12px;border:1.5px solid #378ADD;overflow:hidden;background:#E6F1FB;}
+.powder-header{padding:10px 14px 8px;display:flex;justify-content:space-between;align-items:center;border-bottom:0.5px solid rgba(55,138,221,0.2);}
+.powder-title{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#185FA5;}
+.powder-reset{font-size:10px;color:#185FA5;background:none;border:0.5px solid #378ADD;border-radius:4px;padding:2px 8px;cursor:pointer;}
+.powder-grid{display:grid;grid-template-columns:repeat(3,1fr);padding:10px 14px;gap:8px;}
+.pw-item{text-align:center;}
+.pw-lbl{font-size:9px;color:#185FA5;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;opacity:.8;}
+.pw-val{font-size:16px;font-weight:500;color:#0C447C;}
+.pw-sub{font-size:9px;color:#185FA5;margin-top:1px;opacity:.7;}
+.powder-bar-wrap{padding:4px 14px 6px;}
+.powder-bar-track{height:6px;background:rgba(55,138,221,0.2);border-radius:3px;overflow:hidden;}
+.powder-bar-fill{height:100%;border-radius:3px;background:#378ADD;transition:width .5s;}
+.powder-input-row{padding:8px 14px 10px;border-top:0.5px solid rgba(55,138,221,0.2);display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.pw-inp-lbl{font-size:11px;color:#185FA5;}
+.pw-inp{width:80px;font-size:12px;padding:4px 7px;border:0.5px solid #378ADD;border-radius:6px;background:rgba(255,255,255,0.7);color:#0C447C;font-family:monospace;}
+.pw-btn{font-size:11px;padding:4px 12px;border:0.5px solid #378ADD;border-radius:6px;background:rgba(255,255,255,0.7);color:#185FA5;cursor:pointer;font-weight:500;}
+.pw-btn:hover{background:#fff;}
+.powder-advice{padding:6px 14px 10px;font-size:11px;color:#185FA5;line-height:1.5;font-weight:500;}
+
+/* CORRECTION RISK PANEL */
+.risk-panel{margin:0 14px 9px;border-radius:12px;overflow:hidden;border:0.5px solid rgba(0,0,0,0.1);background:#fff;}
+.risk-header{padding:9px 14px 8px;border-bottom:0.5px solid rgba(0,0,0,0.08);display:flex;justify-content:space-between;align-items:center;}
+.risk-signals{padding:6px 0;}
+.rs2-row{display:flex;justify-content:space-between;align-items:center;padding:5px 14px;border-bottom:0.5px solid rgba(0,0,0,0.04);}
+.rs2-row:last-child{border-bottom:none;}
+.rs2-lbl{font-size:11px;color:#666;}
+.rs2-right{display:flex;align-items:center;gap:6px;}
+.rs2-dot{width:7px;height:7px;border-radius:50%;}
+.rs2-val{font-size:11px;font-weight:500;}
+.risk-verdict{padding:10px 14px;border-top:0.5px solid rgba(0,0,0,0.08);border-radius:0 0 12px 12px;}
+.rv-title{font-size:13px;font-weight:500;margin-bottom:3px;}
+.rv-sub{font-size:11px;color:#666;line-height:1.5;}
 </style>
 </head>
 <body>
 <div class="app">
+
 <div class="sbar">
   <div>
-    <div class="sbar-title">Correction Dashboard v5</div>
+    <div class="sbar-title">Correction Dashboard v6</div>
     <div class="sbar-sub" id="last-upd">Loading...</div>
   </div>
   <div style="display:flex;gap:8px;align-items:center;">
@@ -117,6 +152,58 @@ body{background:#f5f5f0;font-family:monospace;}
   <span id="dd-confirm-badge" class="conf-pill cp-none">--</span>
 </div>
 
+<!-- POWDER TRACKER PANEL -->
+<div class="powder-panel">
+  <div class="powder-header">
+    <span class="powder-title">⑥ Dip-Buy Powder Tracker</span>
+    <button class="powder-reset" onclick="resetPowder()">Reset Month</button>
+  </div>
+  <div class="powder-grid">
+    <div class="pw-item">
+      <div class="pw-lbl">Monthly budget</div>
+      <div class="pw-val" id="pw-budget">₹30,000</div>
+      <div class="pw-sub">dip-buy pool</div>
+    </div>
+    <div class="pw-item">
+      <div class="pw-lbl">Already deployed</div>
+      <div class="pw-val" id="pw-deployed">₹0</div>
+      <div class="pw-sub" id="pw-deployed-sub">this month</div>
+    </div>
+    <div class="pw-item">
+      <div class="pw-lbl">Remaining powder</div>
+      <div class="pw-val" id="pw-remaining">₹30,000</div>
+      <div class="pw-sub" id="pw-remaining-pct">100% left</div>
+    </div>
+  </div>
+  <div class="powder-bar-wrap">
+    <div class="powder-bar-track">
+      <div class="powder-bar-fill" id="pw-bar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="powder-advice" id="pw-advice">Enter how much you invest each time to track remaining powder.</div>
+  <div class="powder-input-row">
+    <span class="pw-inp-lbl">I invested ₹</span>
+    <input class="pw-inp" id="pw-amt-inp" type="number" placeholder="10000" min="0"/>
+    <button class="pw-btn" onclick="recordDeployment()">Record ✓</button>
+    <span class="pw-inp-lbl" style="margin-left:4px;">Budget ₹</span>
+    <input class="pw-inp" id="pw-budget-inp" type="number" value="30000" onchange="saveBudget()" style="width:70px;"/>
+  </div>
+</div>
+
+<!-- CORRECTION CONTINUATION RISK -->
+<div class="risk-panel">
+  <div class="risk-header">
+    <span class="ph-title">⑦ Correction Continuation Risk</span>
+    <span class="ph-badge" id="risk-badge">--</span>
+  </div>
+  <div class="risk-signals" id="risk-signals"></div>
+  <div class="risk-verdict" id="risk-verdict">
+    <div class="rv-title" id="rv-title">--</div>
+    <div class="rv-sub" id="rv-sub">--</div>
+  </div>
+</div>
+
+<!-- PANEL 1 -->
 <div class="panel">
   <div class="ph"><span class="ph-title">① Market Stress · Nifty 50</span><span class="ph-badge" id="p1b">--</span></div>
   <div class="smeter"><div class="sneedle" id="sneedle"></div></div>
@@ -133,6 +220,7 @@ body{background:#f5f5f0;font-family:monospace;}
   </div>
 </div>
 
+<!-- PANEL 2 -->
 <div class="panel">
   <div class="ph"><span class="ph-title">② Breadth Health</span><span class="ph-badge" id="p2b">--</span></div>
   <div class="pm" style="padding-bottom:4px;"><div id="b-bars"></div></div>
@@ -146,6 +234,7 @@ body{background:#f5f5f0;font-family:monospace;}
   </div>
 </div>
 
+<!-- PANEL 3 -->
 <div class="panel">
   <div class="ph"><span class="ph-title">③ Market Structure · Dual Drawdown</span><span class="ph-badge" id="p3b">--</span></div>
   <div class="pm" style="padding-bottom:6px;">
@@ -161,6 +250,7 @@ body{background:#f5f5f0;font-family:monospace;}
   </div>
 </div>
 
+<!-- PANEL 4 -->
 <div class="panel">
   <div class="ph"><span class="ph-title">④ Macro Risk Monitor</span><span class="ph-badge" id="p4b">--</span></div>
   <div class="macro-grid">
@@ -177,6 +267,7 @@ body{background:#f5f5f0;font-family:monospace;}
   </div>
 </div>
 
+<!-- PANEL 5 RECOVERY -->
 <div class="panel">
   <div class="ph"><span class="ph-title">⑤ Trend Recovery Monitor</span><span class="ph-badge" id="p5b">--</span></div>
   <div class="rec-grid">
@@ -191,6 +282,7 @@ body{background:#f5f5f0;font-family:monospace;}
   <div class="rec-lbls"><span>No recovery</span><span>Early</span><span>Confirmed</span><span>Strong</span></div>
 </div>
 
+<!-- FINAL DECISION -->
 <div class="interp-box" id="interp-box">
   <div class="ib-top">
     <div class="ib-phase" id="ib-phase">--</div>
@@ -213,12 +305,12 @@ body{background:#f5f5f0;font-family:monospace;}
     <div class="ag"><div class="ag-cat">Smallcap</div><div class="ag-sig" id="a-sml">--</div></div>
   </div>
   <div class="deploy-row">
-    <span class="dr-lbl">Deploy from ₹<input id="budget-inp" type="number" value="30000" onchange="render()" style="width:75px;font-size:11px;padding:2px 5px;border:0.5px solid #ccc;border-radius:4px;background:transparent;color:#222;font-family:monospace;"/></span>
+    <span class="dr-lbl">Suggested from remaining powder</span>
     <span class="dr-val" id="deploy-v">--</span>
   </div>
 </div>
 
-<div class="note">Demo data · Upload data.json from PythonAnywhere to go live</div>
+<div class="note">India Market Correction Dashboard v6 · Signals not advice</div>
 </div>
 
 <script>
@@ -241,6 +333,7 @@ function randomState(){
   S.rsi_weekly=rnd(28,72,0);S.rsi_prev=rnd(25,68,0);
   S.dma50_val=Math.round(S.nifty*rnd(0.94,1.08,3));
 }
+
 function ddC(v){return v<5?'#1D9E75':v<8?'#BA7517':v<12?'#E24B4A':'#A32D2D';}
 function vixC(v){return v<15?'#1D9E75':v<20?'#BA7517':'#E24B4A';}
 function adC(v){return v>0.8?'#1D9E75':v>0.4?'#BA7517':'#E24B4A';}
@@ -251,48 +344,180 @@ function T(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
 function D(id,c){var e=document.getElementById(id);if(e)e.style.background=c;}
 function C(id,c){var e=document.getElementById(id);if(e)e.style.color=c;}
 function fmt(v,d){if(v==null)return'N/A';return(+v).toFixed(d!=null?d:1);}
+function inr(v){return'₹'+Math.round(v).toLocaleString('en-IN');}
 
+// ── POWDER TRACKER ──────────────────────────────────────────────────────────
+function pwKey(){
+  var now=new Date();
+  return 'powder_'+now.getFullYear()+'_'+(now.getMonth()+1);
+}
+function pwBudgetKey(){return 'powder_budget';}
+
+function getPowderState(){
+  try{
+    var budget=parseInt(localStorage.getItem(pwBudgetKey())||'30000');
+    var deployed=parseInt(localStorage.getItem(pwKey())||'0');
+    return{budget:budget,deployed:Math.min(deployed,budget)};
+  }catch(e){return{budget:30000,deployed:0};}
+}
+
+function saveBudget(){
+  try{
+    var v=parseInt(document.getElementById('pw-budget-inp').value)||30000;
+    localStorage.setItem(pwBudgetKey(),v);
+    renderPowder();
+    render();
+  }catch(e){}
+}
+
+function recordDeployment(){
+  try{
+    var amt=parseInt(document.getElementById('pw-amt-inp').value)||0;
+    if(amt<=0)return;
+    var state=getPowderState();
+    var newDeployed=Math.min(state.budget,state.deployed+amt);
+    localStorage.setItem(pwKey(),newDeployed);
+    document.getElementById('pw-amt-inp').value='';
+    renderPowder();
+    render();
+  }catch(e){}
+}
+
+function resetPowder(){
+  try{
+    localStorage.setItem(pwKey(),0);
+    renderPowder();
+    render();
+  }catch(e){}
+}
+
+function renderPowder(){
+  try{
+    var state=getPowderState();
+    var remaining=state.budget-state.deployed;
+    var pct=Math.round(state.deployed/state.budget*100);
+    var remainPct=100-pct;
+
+    document.getElementById('pw-budget-inp').value=state.budget;
+    T('pw-budget',inr(state.budget));
+    T('pw-deployed',inr(state.deployed));
+    T('pw-deployed-sub',pct+'% used');
+    T('pw-remaining',inr(remaining));
+    T('pw-remaining-pct',remainPct+'% left');
+    document.getElementById('pw-bar').style.width=pct+'%';
+
+    var advice='';
+    if(remaining<=0){
+      advice='Powder fully deployed this month. Replenish from next month\'s allocation or wait for salary credit.';
+      C('pw-advice','#A32D2D');
+    }else if(pct>=60){
+      advice='Most powder deployed. Hold remaining ₹'+remaining.toLocaleString('en-IN')+' for a deeper dip.';
+      C('pw-advice','#BA7517');
+    }else if(pct>=30){
+      advice='Partially deployed. ₹'+remaining.toLocaleString('en-IN')+' still available for next dip opportunity.';
+      C('pw-advice','#185FA5');
+    }else{
+      advice='Full powder available. Dashboard signals will guide when and how much to deploy.';
+      C('pw-advice','#185FA5');
+    }
+    T('pw-advice',advice);
+  }catch(e){}
+}
+
+// ── CORRECTION CONTINUATION RISK ────────────────────────────────────────────
+function calcRisk(rec){
+  // Each signal = 1 risk point. Higher = more likely correction continues.
+  var risks=[];
+  var score=0;
+
+  // 1. VIX still rising or elevated — panic not peaked
+  var vixRising=S.vix>=S.vix_peak*0.90&&S.vix>20;
+  risks.push({l:'VIX still elevated',v:vixRising,warn:'Rising fear — selling may continue',ok:'VIX subsiding — fear reducing'});
+  if(vixRising)score++;
+
+  // 2. No higher low formed — downtrend intact
+  var noHL=S.recent_low<=S.prev_low;
+  risks.push({l:'Higher low not formed',v:noHL,warn:'Lower lows — downtrend intact',ok:'Higher low confirmed — structure improving'});
+  if(noHL)score++;
+
+  // 3. Nifty still below 50DMA — institutional resistance above
+  var below50=S.nifty<S.dma50_val;
+  risks.push({l:'Below 50DMA (resistance)',v:below50,warn:'50DMA is overhead resistance',ok:'Above 50DMA — trend recovering'});
+  if(below50)score++;
+
+  // 4. DXY strong — FII selling pressure likely to continue
+  var dxyStrong=S.dxy>104;
+  risks.push({l:'Dollar Index strong',v:dxyStrong,warn:'Strong USD — FII outflows likely',ok:'Dollar weak — FII pressure easing'});
+  if(dxyStrong)score++;
+
+  // 5. RSI not yet oversold bounce (RSI < 35 and not rising)
+  var noRsiBounce=S.rsi_weekly<40&&S.rsi_weekly<=S.rsi_prev;
+  risks.push({l:'RSI no bounce yet',v:noRsiBounce,warn:'Momentum still falling',ok:'RSI turning up — momentum recovering'});
+  if(noRsiBounce)score++;
+
+  // 6. Recovery score low
+  var lowRec=rec.n<=1;
+  risks.push({l:'Recovery signals absent',v:lowRec,warn:'Zero recovery confirmation',ok:'Recovery signals emerging'});
+  if(lowRec)score++;
+
+  return{score,risks};
+}
+
+function getRiskVerdict(score){
+  if(score>=5)return{lbl:'High Risk',cls:'pb-r',col:'#A32D2D',bg:'#FCEBEB',title:'Correction likely continuing',sub:'5+ risk factors active. Avoid deploying remaining powder in one shot. Wait for at least 2-3 risk factors to clear before adding significantly.'};
+  if(score>=3)return{lbl:'Moderate Risk',cls:'pb-y',col:'#854F0B',bg:'#FAEEDA',title:'Could go either way',sub:'Mixed signals. Deploy only in small tranches. Keep majority of remaining powder for confirmation.'};
+  if(score>=1)return{lbl:'Low Risk',cls:'pb-o',col:'#993C1D',bg:'#FAECE7',title:'Stabilising — risk reducing',sub:'Few risk factors remain. Correction may be nearing end. Can deploy moderately with reasonable confidence.'};
+  return{lbl:'Very Low Risk',cls:'pb-g',col:'#3B6D11',bg:'#EAF3DE',title:'Correction appears to be ending',sub:'Risk factors have cleared. High confidence that the worst is over. Deploy remaining powder.'};
+}
+
+// ── SCORING ENGINE (Joy + TARS hybrid) ──────────────────────────────────────
 function scoreIt(){
-  var pts=0, items=[];
-  function add(n,v,mx,col){pts+=v; items.push({n,v,mx,col});}
+  var pts=0,items=[];
+  function add(n,v,mx,col){pts+=v;items.push({n,v,mx,col});}
 
-  // A. Drawdown Logic (High Conviction for Long Term)
-  var cl = confLvl(S.ath_dd, S.w52_dd);
-  var dd = cl===2 ? (S.ath_dd < 10 ? 1.0 : S.ath_dd < 15 ? 1.5 : 2.5) : (cl===1 ? 0.7 : 0);
-  add('Drawdown Depth', dd, 2.5, dd >= 1.5 ? '#E24B4A' : '#BA7517');
+  // A. Drawdown — Joy's improved thresholds
+  var cl=confLvl(S.ath_dd,S.w52_dd);
+  var dd=cl===2?(S.ath_dd<10?1.0:S.ath_dd<15?1.5:2.5):(cl===1?0.7:0);
+  add('Drawdown Depth',dd,2.5,dd>=1.5?'#E24B4A':'#BA7517');
 
-  // B. Fear Gauge (VIX) - INCREASED WEIGHT FOR HIGH RISK APPETITE
-  // Buying when VIX > 25 is historically the best time for MF units
-  var vp = S.vix < 16 ? 0 : S.vix < 21 ? 0.5 : S.vix < 26 ? 1.5 : 2.5;
-  add('Volatility (Fear)', vp, 2.5, vp >= 1.5 ? '#A32D2D' : '#BA7517');
+  // B. VIX — Joy's improved thresholds
+  var vp=S.vix<16?0:S.vix<21?0.5:S.vix<26?1.5:2.5;
+  add('Volatility (VIX)',vp,2.5,vp>=1.5?'#A32D2D':'#BA7517');
 
-  // C. Structural Value (200-DMA)
-  // Being 10% below 200DMA is a rare "Generational" buy signal
-  var dmaP = S.dma200 < -10 ? 2.0 : S.dma200 < -5 ? 1.0 : S.dma200 < 0 ? 0.5 : 0;
-  add('Distance from 200DMA', dmaP, 2.0, dmaP >= 1.5 ? '#E24B4A' : '#1D9E75');
+  // C. 200DMA distance — Joy's new signal
+  var dmaP=S.dma200<-10?2.0:S.dma200<-5?1.0:S.dma200<0?0.5:0;
+  add('Distance from 200DMA',dmaP,2.0,dmaP>=1.5?'#E24B4A':'#1D9E75');
 
-  // D. Breadth Check (Broad Market Health)
-  var bp = (S.s50 && S.s50 < 20 ? 1.0 : S.s50 < 40 ? 0.5 : 0);
-  add('Broad Market Pain', bp, 1.0, bp >= 1 ? '#E24B4A' : '#1D9E75');
+  // D. Breadth
+  var bp=S.s50&&S.s50<20?1.0:S.s50&&S.s50<40?0.5:0;
+  add('Broad Market Pain',bp,1.0,bp>=1?'#E24B4A':'#1D9E75');
 
-  // E. Institutional Flow (FII Pressure)
-  var fp = S.fii30 && S.fii30 < -20000 ? 1.0 : S.fii30 < -10000 ? 0.5 : 0;
-  add('FII Exhaustion', fp, 1.0, fp >= 1 ? '#A32D2D' : '#BA7517');
+  // E. FII — TARS original threshold
+  var fp=S.fii30&&S.fii30<-15000?1.0:S.fii30&&S.fii30<-5000?0.5:0;
+  add('FII Exhaustion',fp,1.0,fp>=1?'#A32D2D':'#BA7517');
 
-  // F. Valuation (PE Ratio)
-  var ep2 = S.pe && S.pe < 19 ? 1.0 : S.pe < 22 ? 0.5 : 0;
-  add('PE Value Opportunity', ep2, 1.0, S.pe < 20 ? '#1D9E75' : '#E24B4A');
+  // F. PE valuation
+  var ep2=S.pe&&S.pe<19?1.0:S.pe&&S.pe<22?0.5:0;
+  add('PE Valuation',ep2,1.0,S.pe&&S.pe<20?'#1D9E75':'#E24B4A');
 
-  return {pts: Math.min(10, Math.max(0, Math.round(pts*10)/10)), items};
+  // G. PCR — kept by TARS (only scores when available)
+  var pp=S.pcr&&S.pcr>1.8?0.5:0;
+  add('PCR Sentiment',pp,0.5,pp>0?'#1D9E75':'#BA7517');
+
+  // H. EPS — kept by TARS as structural guard
+  var ep=S.eps==='Upgrading'?0.5:S.eps==='Stable'?0.25:0;
+  add('EPS Trend',ep,0.5,S.eps==='Upgrading'?'#1D9E75':'#BA7517');
+
+  return{pts:Math.min(10,Math.max(0,Math.round(pts*10)/10)),items};
 }
 
 function calcRec(){
   var n=0;
-  var hl=S.recent_low>S.prev_low; if(hl)n++;
-  var ab=S.nifty>S.dma50_val; if(ab)n++;
-  var ru=S.rsi_weekly>S.rsi_prev&&S.rsi_weekly>40; if(ru)n++;
-  var vf=S.vix<S.vix_peak*0.85; if(vf)n++;
-  var be=S.ad>1.0&&S.s50>40; if(be)n++;
+  var hl=S.recent_low>S.prev_low;if(hl)n++;
+  var ab=S.nifty>S.dma50_val;if(ab)n++;
+  var ru=S.rsi_weekly>S.rsi_prev&&S.rsi_weekly>40;if(ru)n++;
+  var vf=S.vix<S.vix_peak*0.85;if(vf)n++;
+  var be=S.ad>1.0&&S.s50>40;if(be)n++;
   var rp=S.nifty-S.recent_low;
   return{n,hl,ab,ru,vf,be,rp,rpct:((rp/S.recent_low)*100).toFixed(1)};
 }
@@ -305,16 +530,17 @@ function recZone(n){
   return{lbl:'Strong',cls:'pb-b',col:'#0F6E56',np:94};
 }
 
-function combined(cs,rn,budget){
+function combined(cs,rn,remaining){
   var d=0,ph='',desc='',fl='Skip',mi='Skip',sl='Skip',bc='#ccc',bg='#f8f8f8';
-  if(cs>=7&&rn<=1){ph='Deep Correction — Still Falling';desc='Market deeply corrected but no recovery signs yet. Deploy 50% now in tranches. Hold 50% in case of further downside.';d=50;fl='Strong';mi='Strong';sl='Moderate';bc='#E24B4A';bg='#FCEBEB';}
-  else if(cs>=7&&rn<=3){ph='Deep Correction — Early Recovery';desc='Best of both worlds. Market deeply corrected AND showing early recovery. This is the zone legends invest in. Deploy aggressively.';d=100;fl='Strong';mi='Aggressive';sl='Aggressive';bc='#D85A30';bg='#FAECE7';}
-  else if(cs>=7&&rn>=4){ph='Correction Ending — Recovery Confirmed';desc='Deep correction with confirmed recovery. Bottom is likely in. Deploy everything and consider extra lump sum if available.';d=100;fl='Strong';mi='Aggressive';sl='Aggressive';bc='#1D9E75';bg='#EAF3DE';}
-  else if(cs>=4&&rn<=2){ph='Moderate Correction — No Recovery Yet';desc='Meaningful correction but not extreme. No clear recovery. Invest in small tranches. Keep powder dry for deeper fall.';d=25;fl='Moderate';mi='Light';sl='Skip';bc='#BA7517';bg='#FAEEDA';}
-  else if(cs>=4&&rn>=3){ph='Moderate Correction — Recovery Developing';desc='Correction plus developing recovery. Good entry zone. Deploy half your budget now.';d=50;fl='Strong';mi='Moderate';sl='Light';bc='#EF9F27';bg='#FAEEDA';}
-  else if(cs<4&&rn<=2){ph='No Correction — Market Normal';desc='Market not in correction. Continue SIP as planned. Save dip-buy budget for when signals appear.';d=0;fl='Skip';mi='Skip';sl='Skip';bc='#ccc';bg='#f8f8f8';}
-  else{ph='Market Rising — Correction Over';desc='Correction fading, recovery confirmed. Continue SIP only. Do not chase the rally — wait for next correction.';d=0;fl='SIP only';mi='SIP only';sl='Skip';bc='#185FA5';bg='#E6F1FB';}
-  return{ph,desc,d,amt:Math.round(budget*d/100),fl,mi,sl,bc,bg};
+  if(cs>=7&&rn<=1){ph='Deep Correction — Still Falling';desc='Market deeply corrected but no recovery signs yet. Deploy 50% of remaining powder in tranches. Hold rest for further downside.';d=50;fl='Strong';mi='Strong';sl='Moderate';bc='#E24B4A';bg='#FCEBEB';}
+  else if(cs>=7&&rn<=3){ph='Deep Correction — Early Recovery';desc='Best of both worlds. Deep correction + early recovery forming. Deploy aggressively from remaining powder.';d=100;fl='Strong';mi='Aggressive';sl='Aggressive';bc='#D85A30';bg='#FAECE7';}
+  else if(cs>=7&&rn>=4){ph='Correction Ending — Recovery Confirmed';desc='Bottom likely in. Deploy all remaining powder and consider extra lump sum from liquid fund.';d=100;fl='Strong';mi='Aggressive';sl='Aggressive';bc='#1D9E75';bg='#EAF3DE';}
+  else if(cs>=4&&rn<=2){ph='Moderate Correction — No Recovery Yet';desc='Meaningful correction but not extreme. Deploy 25% of remaining powder in small tranches.';d=25;fl='Moderate';mi='Light';sl='Skip';bc='#BA7517';bg='#FAEEDA';}
+  else if(cs>=4&&rn>=3){ph='Moderate Correction — Recovery Developing';desc='Correction + developing recovery. Good entry. Deploy 50% of remaining powder now.';d=50;fl='Strong';mi='Moderate';sl='Light';bc='#EF9F27';bg='#FAEEDA';}
+  else if(cs<4&&rn<=2){ph='No Correction — Market Normal';desc='Market not in correction. Continue SIP. Save all dip-buy powder for when signals appear.';d=0;fl='Skip';mi='Skip';sl='Skip';bc='#ccc';bg='#f8f8f8';}
+  else{ph='Market Rising — Correction Over';desc='Correction fading, recovery confirmed. SIP only. Do not chase the rally. Replenish powder for next correction.';d=0;fl='SIP only';mi='SIP only';sl='Skip';bc='#185FA5';bg='#E6F1FB';}
+  var suggestedAmt=Math.round(remaining*d/100);
+  return{ph,desc,d,amt:suggestedAmt,fl,mi,sl,bc,bg};
 }
 
 function aStyle(s){return{'Skip':'color:#bbb','SIP only':'color:#185FA5','Light':'color:#BA7517','Moderate':'color:#EF9F27','Strong':'color:#1D9E75;font-weight:500','Aggressive':'color:#E24B4A;font-weight:500'}[s]||'';}
@@ -323,9 +549,13 @@ function render(){
   var {pts,items}=scoreIt();
   var rec=calcRec();
   var rz=recZone(rec.n);
-  var budget=parseInt(document.getElementById('budget-inp').value)||30000;
-  var com=combined(pts,rec.n,budget);
+  var pwState=getPowderState();
+  var remaining=pwState.budget-pwState.deployed;
+  var com=combined(pts,rec.n,remaining);
+  var risk=calcRisk(rec);
+  var rv=getRiskVerdict(risk.score);
 
+  // BIG STATUS
   var big=document.getElementById('big-status');
   big.style.cssText='background:'+com.bg+';border-color:'+com.bc+';margin:10px 14px;border-radius:12px;padding:13px 16px;border:0.5px solid;display:flex;align-items:center;justify-content:space-between;';
   D('bs-dot',com.bc);T('bs-label',com.ph);C('bs-label',com.bc);
@@ -340,6 +570,20 @@ function render(){
   cp.className='conf-pill '+['cp-none','cp-one','cp-both'][cl];
   cp.textContent=['Not confirmed','Partial','Confirmed'][cl];
 
+  // RISK PANEL
+  var rb=document.getElementById('risk-badge');
+  rb.textContent=rv.lbl;rb.className='ph-badge '+rv.cls;
+  var rs=document.getElementById('risk-signals');rs.innerHTML='';
+  risk.risks.forEach(function(r){
+    var col=r.v?'#E24B4A':'#1D9E75';
+    rs.innerHTML+='<div class="rs2-row"><span class="rs2-lbl">'+r.l+'</span><div class="rs2-right"><div class="rs2-dot" style="background:'+col+'"></div><span class="rs2-val" style="color:'+col+'">'+(r.v?r.warn:r.ok)+'</span></div></div>';
+  });
+  var vd=document.getElementById('risk-verdict');
+  vd.style.background=rv.bg;
+  T('rv-title',rv.title);C('rv-title',rv.col);
+  T('rv-sub',rv.sub);
+
+  // PANEL 1
   document.getElementById('sneedle').style.left=(S.ath_dd<5?5:S.ath_dd<8?28:S.ath_dd<12?55:S.ath_dd<18?78:94)+'%';
   var p1b=document.getElementById('p1b');
   p1b.textContent=S.ath_dd<5?'Normal':S.ath_dd<8?'Correction':S.ath_dd<12?'Deep':'Panic';
@@ -356,6 +600,7 @@ function render(){
   T('pe-v',S.pe?S.pe.toFixed(1)+'x':'N/A');D('pe-dot',pec);C('pe-v',pec);
   if(S.pe){var pd=((S.pe-S.pe10y)/S.pe10y*100).toFixed(1);T('pe-vs',(pd>=0?'+':'')+pd+'% vs 22.5x avg');C('pe-vs',pd<0?'#1D9E75':pd<12?'#BA7517':'#E24B4A');}else T('pe-vs','N/A');
 
+  // PANEL 2
   var bb2=document.getElementById('b-bars');bb2.innerHTML='';
   [{n:'Advance/Decline',v:S.ad?Math.round((S.ad/2)*100):0,raw:S.ad?S.ad.toFixed(2):'N/A',col:S.ad?adC(S.ad):'#bbb'},{n:'Stocks above 50DMA',v:S.s50||0,raw:S.s50?S.s50+'%':'N/A',col:S.s50?(S.s50<20?'#E24B4A':S.s50<40?'#BA7517':'#1D9E75'):'#bbb'},{n:'52W Highs ratio',v:S.h52&&S.l52?Math.round(S.h52/(S.h52+S.l52)*100):0,raw:S.h52&&S.l52?S.h52+'H/'+S.l52+'L':'N/A',col:S.h52&&S.l52?(S.h52<S.l52/3?'#E24B4A':S.h52<S.l52?'#BA7517':'#1D9E75'):'#bbb'}].forEach(b=>{bb2.innerHTML+='<div class="bar-row"><span class="bar-lbl">'+b.n+'</span><div class="btrack"><div class="bfill" style="width:'+Math.min(100,Math.max(0,b.v))+'%;background:'+b.col+'"></div></div><span class="bval" style="color:'+b.col+'">'+b.raw+'</span></div>';});
   var p2w=(S.ad&&S.ad<0.4?1:0)+(S.s50&&S.s50<20?1:0)+(S.l52&&S.h52&&S.l52>S.h52*3?1:0);
@@ -367,6 +612,7 @@ function render(){
   T('pcr-v',S.pcr?S.pcr.toFixed(2):'N/A');D('pcr-dot',S.pcr?(S.pcr>1.5?'#1D9E75':S.pcr>1.2?'#BA7517':'#E24B4A'):'#bbb');C('pcr-v',S.pcr?(S.pcr>1.5?'#1D9E75':S.pcr>1.2?'#BA7517':'#E24B4A'):'#bbb');
   T('mp-v',S.maxpain?S.maxpain.toLocaleString('en-IN'):'N/A');
 
+  // PANEL 3
   var idxs=[{n:'Nifty 50',a:S.ath_dd,w:S.w52_dd},{n:'Midcap 150',a:S.mid_ath,w:S.mid_52},{n:'Smallcap 250',a:S.sml_ath,w:S.sml_52}];
   var tb=document.getElementById('dd-tbody');tb.innerHTML='';var tc=0;
   idxs.forEach(idx=>{var ci=confLvl(idx.a,idx.w);if(ci===2)tc++;var cp2=['<span class="conf-pill cp-none">No</span>','<span class="conf-pill cp-one">Partial</span>','<span class="conf-pill cp-both">Yes</span>'][ci];tb.innerHTML+='<tr><td>'+idx.n+'</td><td style="color:'+ddC(idx.a)+';font-weight:500">−'+fmt(idx.a)+'%</td><td style="color:'+ddC(idx.w)+';font-weight:500">−'+fmt(idx.w)+'%</td><td>'+cp2+'</td></tr>';});
@@ -377,6 +623,7 @@ function render(){
   idxs.forEach(idx=>{sb3.innerHTML+='<div style="margin-bottom:8px;"><div style="font-size:10px;color:#666;margin-bottom:3px;">'+idx.n+'</div><div class="bar-row" style="margin-bottom:2px;"><span class="bar-lbl" style="font-size:9px;width:60px;color:#999;">ATH fall</span><div class="btrack"><div class="bfill" style="width:'+Math.min(100,idx.a/30*100)+'%;background:'+ddC(idx.a)+'"></div></div><span class="bval" style="color:'+ddC(idx.a)+'">'+fmt(idx.a)+'%</span></div><div class="bar-row"><span class="bar-lbl" style="font-size:9px;width:60px;color:#999;">52W fall</span><div class="btrack"><div class="bfill" style="width:'+Math.min(100,idx.w/30*100)+'%;background:'+ddC(idx.w)+'"></div></div><span class="bval" style="color:'+ddC(idx.w)+'">'+fmt(idx.w)+'%</span></div></div>';});
   document.getElementById('struct-interp').textContent=(S.mid_ath>15&&S.mid_52>10?'Midcap: confirmed opp.':S.mid_ath>10?'Midcap: partial signal.':'Midcap: mild.')+' '+(S.sml_ath>20&&S.sml_52>15?'Smallcap: deep correction — aggressive opp.':S.sml_ath>15?'Smallcap: significant fall.':'Smallcap: moderate.');
 
+  // PANEL 4
   T('oil-v','$'+fmt(S.oil));var oc=S.oil>95?'#E24B4A':S.oil>85?'#BA7517':'#1D9E75';C('oil-v',oc);T('oil-s',S.oil>95?'High — inflationary':S.oil>85?'Moderate':'Benign');C('oil-s',oc);
   T('yld-v',fmt(S.yld,2)+'%');var yc=S.yld>4.5?'#E24B4A':S.yld>4.0?'#BA7517':'#1D9E75';C('yld-v',yc);T('yld-s',S.yld>4.5?'Elevated — FII risk':S.yld>4?'Moderate':'Benign');C('yld-s',yc);
   T('dxy-v',S.dxy?fmt(S.dxy):'N/A');var dxc=S.dxy>107?'#E24B4A':S.dxy>104?'#BA7517':'#1D9E75';C('dxy-v',dxc);T('dxy-s',S.dxy>107?'Strong $ — headwind':S.dxy>104?'Moderate':'Supportive');C('dxy-s',dxc);
@@ -388,7 +635,7 @@ function render(){
   T('f30-v',S.fii30?crumb(S.fii30):'N/A');D('f30-dot',S.fii30?flC(S.fii30):'#bbb');C('f30-v',S.fii30?flC(S.fii30):'#bbb');
   var ec=S.eps==='Upgrading'?'#1D9E75':S.eps==='Stable'?'#BA7517':'#E24B4A';T('eps-v',S.eps);D('eps-dot',ec);C('eps-v',ec);
 
-  // Panel 5 Recovery
+  // PANEL 5 RECOVERY
   var p5b=document.getElementById('p5b');p5b.textContent=rz.lbl;p5b.className='ph-badge '+rz.cls;
   T('rec-low',S.recent_low.toLocaleString('en-IN'));T('rec-low-sub','Recent swing low');
   var rpt=rec.rp>0?'+'+Math.round(rec.rp):Math.round(rec.rp);
@@ -403,6 +650,7 @@ function render(){
   sigs.forEach(s=>{rl.innerHTML+='<div class="rs-row"><span class="rs-lbl">'+s.l+'</span><div class="rs-right"><span style="color:'+(s.v?'#1D9E75':'#E24B4A')+';font-size:12px;">'+(s.v?'✓':'✗')+'</span><span class="rs-val" style="color:'+(s.v?'#1D9E75':'#E24B4A')+'">'+(s.v?s.t:s.f)+'</span></div></div>';});
   document.getElementById('rec-needle').style.left=rz.np+'%';
 
+  // FINAL DECISION
   var ib=document.getElementById('interp-box');
   ib.style.cssText='margin:0 14px 9px;border-radius:12px;border:1.5px solid '+com.bc+';overflow:hidden;background:'+com.bg+';';
   T('ib-phase',com.ph);C('ib-phase',com.bc);T('ib-desc',com.desc);
@@ -410,25 +658,29 @@ function render(){
   var sbd=document.getElementById('score-bd');sbd.innerHTML='';
   items.forEach(it=>{var p=Math.round((it.v/it.mx)*100);sbd.innerHTML+='<div class="bar-row" style="margin-bottom:3px;"><span class="bar-lbl" style="font-size:9px;width:140px;">'+it.n+'</span><div class="btrack"><div class="bfill" style="width:'+Math.min(100,Math.max(0,p))+'%;background:'+it.col+'"></div></div><span class="bval" style="color:'+it.col+';font-size:9px;">'+it.v.toFixed(1)+'/'+it.mx+'</span></div>';});
   var sf=document.getElementById('score-fill');sf.style.width=(pts/10*100)+'%';sf.style.background=com.bc;
-  T('ib-action-detail','SIP ₹10,000 → Always continue\nDip buy → Deploy '+com.d+'% = ₹'+com.amt.toLocaleString('en-IN')+'\n'+(com.d===100?'Extra lump sum → Yes, consider it':com.d>0?'Extra lump sum → Hold for deeper fall':'Extra lump sum → Save for next correction'));
+
+  var powderLine=remaining<=0?'No powder remaining — replenish next month':'Deploy from ₹'+remaining.toLocaleString('en-IN')+' remaining powder → ₹'+com.amt.toLocaleString('en-IN');
+  T('ib-action-detail','SIP ₹10,000 → Always continue\nDip buy → '+powderLine+'\n'+(com.d===100?'Extra lump sum → Yes, consider liquid fund':'Extra lump sum → Save for now'));
   document.getElementById('alloc-grid').style.borderTopColor=com.bc;
   document.getElementById('a-flex').textContent=com.fl;document.getElementById('a-flex').setAttribute('style',aStyle(com.fl));
   document.getElementById('a-mid').textContent=com.mi;document.getElementById('a-mid').setAttribute('style',aStyle(com.mi));
   document.getElementById('a-sml').textContent=com.sl;document.getElementById('a-sml').setAttribute('style',aStyle(com.sl));
-  T('deploy-v','₹'+com.amt.toLocaleString('en-IN'));C('deploy-v',com.bc);
+  T('deploy-v',remaining<=0?'₹0 — no powder':inr(com.amt));C('deploy-v',remaining<=0?'#bbb':com.bc);
+
+  // Update timestamp
   document.getElementById('last-upd').textContent='Demo · '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
 }
 
-// Live data loader
+// ── LIVE DATA LOADER ────────────────────────────────────────────────────────
 async function loadLiveData(){
   try{
-    const base='https://joydeep-jbn.github.io/market-dashboard/';
-    const res=await fetch(base+'data.json?t='+Date.now());
+    var base='https://joydeep-jbn.github.io/market-dashboard/';
+    var res=await fetch(base+'data.json?t='+Date.now());
     if(!res.ok)throw new Error('not found');
-    const d=await res.json();
-    const s=d.stress||{},b=d.breadth||{},st=d.structure||{},m=d.macro||{};
+    var d=await res.json();
+    var s=d.stress||{},b=d.breadth||{},st=d.structure||{},m=d.macro||{};
     S.nifty=s.nifty_level??S.nifty;S.ath_dd=s.dd_ath_pct??S.ath_dd;S.w52_dd=s.dd_52w_pct??S.w52_dd;
-    S.vix=s.vix??S.vix;S.dma200=s.dist_200dma_pct??S.dma200;S.pe=s.pe_ratio??S.pe;
+    S.vix=s.vix??S.vix;S.dma200=s.dist_200dma_pct??S.dma200;S.pe=s.pe_ratio??S.pe;S.pe10y=22.5;
     S.ad=b.ad_ratio??S.ad;S.s50=b.pct_above_50dma??S.s50;S.h52=b.new_52w_highs??S.h52;
     S.l52=b.new_52w_lows??S.l52;S.mom50=b.momentum_gap_50dma??S.mom50;S.pcr=b.pcr??S.pcr;
     var mid=st.midcap150||{},sml=st.smallcap250||{};
@@ -437,61 +689,52 @@ async function loadLiveData(){
     S.dma50_val=(st.nifty50&&st.nifty50.dma50)?st.nifty50.dma50:S.dma50_val;
     S.oil=m.brent_usd??S.oil;S.yld=m.us10y_yield??S.yld;S.dxy=m.dxy??S.dxy;S.inr=m.usdinr??S.inr;
     S.fii=m.fii_today_cr??S.fii;S.dii=m.dii_today_cr??S.dii;S.fii30=m.fii_30d_cr??S.fii30;S.eps=m.eps_trend??S.eps;
-    // Map recovery section from data.json
     var r=d.recovery||{};
-    if(r.recent_low) S.recent_low=r.recent_low;
-    if(r.rally_from_low_pct!==null&&r.rally_from_low_pct!==undefined) S.rally_pct=r.rally_from_low_pct;
-    if(r.higher_low!==null&&r.higher_low!==undefined) S.higher_low=r.higher_low;
-    if(r.vix_trend) S.vix_trend=r.vix_trend;
-    if(r.vix_peak) S.vix_peak=r.vix_peak;
-    if(r.rsi_weekly!==null&&r.rsi_weekly!==undefined) S.rsi_weekly=r.rsi_weekly;
-    if(r.breadth_up_days!==null&&r.breadth_up_days!==undefined) S.breadth_up_days=r.breadth_up_days;
-    // Derive prev_low from higher_low boolean for calcRec()
-    // If higher_low=true: prev_low < recent_low (bullish)
-    // If higher_low=false: prev_low > recent_low (bearish)
-    if(r.higher_low===true) S.prev_low=S.recent_low*0.99;
-    else if(r.higher_low===false) S.prev_low=S.recent_low*1.01;
-    // RSI prev — set slightly lower so RSI rising check works naturally
+    if(r.recent_low)S.recent_low=r.recent_low;
+    if(r.vix_peak)S.vix_peak=r.vix_peak;
+    if(r.rsi_weekly!=null)S.rsi_weekly=r.rsi_weekly;
+    if(r.higher_low===true){S.prev_low=S.recent_low*0.99;}
+    else if(r.higher_low===false){S.prev_low=S.recent_low*1.01;}
     S.rsi_prev=S.rsi_weekly-2;
-    try{render();}catch(renderErr){console.warn('Render error:',renderErr);}
-    var badge=document.getElementById('live-badge');badge.textContent='LIVE';badge.style.color='#1D9E75';badge.style.borderColor='#1D9E75';
-    if(d.meta&&d.meta.fetched_at){var dt=new Date(d.meta.fetched_at);document.getElementById('last-upd').textContent='Live · '+dt.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
+    try{render();}catch(re){console.warn('Render:',re);}
+    var badge=document.getElementById('live-badge');
+    badge.textContent='LIVE';badge.style.color='#1D9E75';badge.style.borderColor='#1D9E75';
+    if(d.meta&&d.meta.fetched_at){
+      var dt=new Date(d.meta.fetched_at);
+      document.getElementById('last-upd').textContent='Live · '+dt.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    }
   }catch(e){
-    console.warn('No live data:',e.message);
+    console.warn('Live data error:',e.message);
     randomState();
-    render();
+    try{render();}catch(re){}
     var badge=document.getElementById('live-badge');
     if(badge){badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';}
-    setText('last-upd','Demo mode — data.json not found');
+    document.getElementById('last-upd').textContent='Demo mode';
   }
 }
 
 function simulate(){randomState();render();}
 
 function showLoading(){
-  var ids=["bs-num","bs-label","nifty-lv","dd-ath","dd-52","vix-v","dma-v","pe-v","pe-vs",
-    "ad-v","s50-v","hl-v","mom-v","pcr-v","mp-v","oil-v","yld-v","dxy-v","inr-v",
-    "fii-v","dii-v","f30-v","eps-v","sp-score","sp-action","sp-sub","sp-cap","deploy-v"];
-  ids.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="--";});
-  var _e=document.getElementById("bs-label");if(_e)_e.textContent="Loading...";
-  var _e=document.getElementById("bs-sub");if(_e)_e.textContent="Fetching live market data";
-  var big=document.getElementById("big-status");
-  if(big)big.setAttribute("style","background:#f8f8f6;border-color:#ccc;margin:10px 14px;border-radius:12px;padding:13px 16px;border:0.5px solid;display:flex;align-items:center;justify-content:space-between;");
-  var badge=document.getElementById("live-badge");
-  if(badge){badge.textContent="LOADING";badge.style.color="#BA7517";badge.style.borderColor="#BA7517";}
-  var _e=document.getElementById("last-upd");if(_e)_e.textContent="Fetching live data...";
+  var big=document.getElementById('big-status');
+  if(big)big.setAttribute('style','background:#f8f8f6;border-color:#ccc;margin:10px 14px;border-radius:12px;padding:13px 16px;border:0.5px solid;display:flex;align-items:center;justify-content:space-between;');
+  var e=document.getElementById('bs-label');if(e)e.textContent='Loading...';
+  var e2=document.getElementById('bs-sub');if(e2)e2.textContent='Fetching live market data';
+  var badge=document.getElementById('live-badge');
+  if(badge){badge.textContent='LOADING';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';}
+  var lu=document.getElementById('last-upd');if(lu)lu.textContent='Fetching live data...';
 }
 
 async function initDashboard(){
   showLoading();
-  // Guaranteed fallback after 8 seconds — never stay stuck on Loading
+  renderPowder();
   var fallbackTimer=setTimeout(function(){
     var badge=document.getElementById('live-badge');
     if(badge&&badge.textContent==='LOADING'){
-      console.warn('Live data timeout — using demo');
-      randomState();render();
+      randomState();
+      try{render();}catch(e){}
       badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';
-      setText('last-upd','Demo mode — live data timeout');
+      var lu=document.getElementById('last-upd');if(lu)lu.textContent='Demo mode — timeout';
     }
   },8000);
   try{
@@ -499,11 +742,10 @@ async function initDashboard(){
     clearTimeout(fallbackTimer);
   }catch(e){
     clearTimeout(fallbackTimer);
-    console.warn('Live data failed:',e);
-    randomState();render();
+    randomState();
+    try{render();}catch(re){}
     var badge=document.getElementById('live-badge');
     if(badge){badge.textContent='DEMO';badge.style.color='#BA7517';badge.style.borderColor='#BA7517';}
-    setText('last-upd','Demo mode — data.json not found');
   }
 }
 
