@@ -1,72 +1,72 @@
 {
   "meta": {
-    "fetched_at": "2026-06-02T06:44:02.481314",
+    "fetched_at": "2026-06-02T11:09:04.743845",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
   },
   "stress": {
-    "nifty_level": 23292.0,
-    "dd_ath_pct": 11.68,
-    "dd_52w_pct": 11.68,
-    "vix": 15.89,
-    "dist_200dma_pct": -6.72,
-    "pe_ratio": 27.17,
+    "nifty_level": 23483.55,
+    "dd_ath_pct": 10.96,
+    "dd_52w_pct": 10.96,
+    "vix": 15.35,
+    "dist_200dma_pct": -5.96,
+    "pe_ratio": 27.53,
     "pe_10y_avg": 22.5,
-    "pe_vs_avg_pct": 20.8
+    "pe_vs_avg_pct": 22.4
   },
   "breadth": {
     "ad_ratio": null,
     "advances": null,
     "declines": null,
-    "pct_above_50dma": 41.0,
+    "pct_above_50dma": 46.2,
     "new_52w_highs": null,
     "new_52w_lows": null,
-    "momentum_gap_50dma": -1.66,
+    "momentum_gap_50dma": -0.87,
     "pcr": null,
     "max_pain": null,
     "options_expiry": null
   },
   "structure": {
     "nifty50": {
-      "level": 23292.0,
-      "dd_ath_pct": 11.68,
-      "dd_52w_pct": 11.68,
-      "dma200": 24970.64,
-      "dma50": 23684.94
+      "level": 23483.55,
+      "dd_ath_pct": 10.96,
+      "dd_52w_pct": 10.96,
+      "dma200": 24971.6,
+      "dma50": 23688.77
     },
     "midcap150": {
-      "level": 69306.85,
-      "dd_ath_pct": 11.05,
-      "dd_52w_pct": 4.33,
-      "dma200": 68356.88,
-      "dma50": 68019.2
+      "level": 70115.8,
+      "dd_ath_pct": 10.01,
+      "dd_52w_pct": 3.21,
+      "dma200": 68360.92,
+      "dma50": 68035.38
     },
     "smallcap250": {
-      "level": null,
-      "dd_ath_pct": null,
-      "dd_52w_pct": null,
+      "level": 18052.3,
+      "dd_ath_pct": 0.12,
+      "dd_52w_pct": 0.12,
       "dma200": null,
       "dma50": null
     }
   },
   "macro": {
-    "brent_usd": 93.99,
+    "brent_usd": 93.86,
     "us10y_yield": 4.47,
-    "dxy": 99.05,
-    "usdinr": 95.17,
+    "dxy": 99.13,
+    "usdinr": 95.26,
     "fii_today_cr": null,
     "dii_today_cr": null,
     "fii_30d_cr": null,
     "eps_trend": "Stable"
   },
   "recovery": {
-    "recent_low": 23288.4,
-    "rally_from_low_pct": 0.0,
+    "recent_low": 23379.55,
+    "rally_from_low_pct": 0.44,
     "higher_low": false,
-    "vix_trend": "Flat",
+    "vix_trend": "Falling",
     "vix_peak": 19.63,
-    "rsi_weekly": 33.9,
+    "rsi_weekly": 35.1,
     "breadth_up_days": 0.2
   }
 }
