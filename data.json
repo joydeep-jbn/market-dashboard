@@ -1,17 +1,17 @@
 {
   "meta": {
-    "fetched_at": "2026-07-15T09:29:07.302341",
+    "fetched_at": "2026-07-15T11:12:05.471264",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
   },
   "stress": {
-    "nifty_level": 24077.2,
-    "dd_ath_pct": 8.71,
-    "dd_52w_pct": 8.71,
-    "vix": 13.34,
-    "dist_200dma_pct": -3.06,
-    "pe_ratio": 28.44,
+    "nifty_level": 24078.5,
+    "dd_ath_pct": 8.7,
+    "dd_52w_pct": 8.7,
+    "vix": 13.27,
+    "dist_200dma_pct": -3.05,
+    "pe_ratio": 28.43,
     "pe_10y_avg": 22.5,
     "pe_vs_avg_pct": 26.4
   },
@@ -29,21 +29,21 @@
   },
   "structure": {
     "nifty50": {
-      "level": 24077.2,
-      "dd_ath_pct": 8.71,
-      "dd_52w_pct": 8.71,
+      "level": 24078.5,
+      "dd_ath_pct": 8.7,
+      "dd_52w_pct": 8.7,
       "dma200": 24836.64,
-      "dma50": 23831.91
+      "dma50": 23831.94
     },
     "midcap150": {
-      "level": 72115.4,
-      "dd_ath_pct": 7.45,
-      "dd_52w_pct": 1.4,
-      "dma200": 68960.96,
-      "dma50": 70846.57
+      "level": 72148.8,
+      "dd_ath_pct": 7.4,
+      "dd_52w_pct": 1.36,
+      "dma200": 68961.13,
+      "dma50": 70847.23
     },
     "smallcap250": {
-      "level": 19356.45,
+      "level": 19355.35,
       "dd_ath_pct": 0.59,
       "dd_52w_pct": 0.59,
       "dma200": null,
@@ -51,10 +51,10 @@
     }
   },
   "macro": {
-    "brent_usd": 85.14,
+    "brent_usd": 85.35,
     "us10y_yield": 4.61,
-    "dxy": 100.92,
-    "usdinr": 96.26,
+    "dxy": 100.98,
+    "usdinr": 96.25,
     "fii_today_cr": null,
     "dii_today_cr": null,
     "fii_30d_cr": null,
@@ -66,7 +66,7 @@
     "higher_low": true,
     "vix_trend": "Flat",
     "vix_peak": 14.68,
-    "rsi_weekly": 50.4,
+    "rsi_weekly": 50.5,
     "breadth_up_days": 0.8
   }
 }
