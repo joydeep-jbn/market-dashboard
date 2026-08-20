@@ -1,6 +1,6 @@
 {
   "meta": {
-    "fetched_at": "2026-08-20T11:04:12.369032",
+    "fetched_at": "2026-08-20T11:43:05.241694",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
@@ -10,10 +10,10 @@
     "dd_ath_pct": 8.12,
     "dd_52w_pct": 8.12,
     "vix": 10.76,
-    "dist_200dma_pct": -2.0,
-    "pe_ratio": 28.12,
+    "dist_200dma_pct": -1.9,
+    "pe_ratio": 28.09,
     "pe_10y_avg": 22.5,
-    "pe_vs_avg_pct": 25.0
+    "pe_vs_avg_pct": 24.8
   },
   "breadth": {
     "ad_ratio": null,
@@ -22,7 +22,7 @@
     "pct_above_50dma": 61.5,
     "new_52w_highs": null,
     "new_52w_lows": null,
-    "momentum_gap_50dma": 0.55,
+    "momentum_gap_50dma": 0.3,
     "pcr": null,
     "max_pain": null,
     "options_expiry": null
@@ -32,8 +32,8 @@
       "level": 24231.85,
       "dd_ath_pct": 8.12,
       "dd_52w_pct": 8.12,
-      "dma200": 24727.21,
-      "dma50": 24100.47
+      "dma200": 24701.57,
+      "dma50": 24160.22
     },
     "midcap150": {
       "level": 74194.15,
@@ -51,9 +51,9 @@
     }
   },
   "macro": {
-    "brent_usd": 93.87,
+    "brent_usd": 94.24,
     "us10y_yield": 4.65,
-    "dxy": 98.69,
+    "dxy": 98.71,
     "usdinr": 95.69,
     "fii_today_cr": null,
     "dii_today_cr": null,
