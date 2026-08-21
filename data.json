@@ -1,6 +1,6 @@
 {
   "meta": {
-    "fetched_at": "2026-08-21T10:12:01.905121",
+    "fetched_at": "2026-08-21T10:49:32.198191",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
@@ -9,7 +9,7 @@
     "nifty_level": 24252.0,
     "dd_ath_pct": 8.04,
     "dd_52w_pct": 8.04,
-    "vix": 11.16,
+    "vix": 11.19,
     "dist_200dma_pct": -1.78,
     "pe_ratio": 28.05,
     "pe_10y_avg": 22.5,
@@ -51,9 +51,9 @@
     }
   },
   "macro": {
-    "brent_usd": 93.63,
+    "brent_usd": 93.62,
     "us10y_yield": 4.7,
-    "dxy": 98.65,
+    "dxy": 98.59,
     "usdinr": 95.68,
     "fii_today_cr": null,
     "dii_today_cr": null,
