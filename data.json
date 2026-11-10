@@ -1,19 +1,19 @@
 {
   "meta": {
-    "fetched_at": "2026-11-09T19:57:52.586304",
+    "fetched_at": "2026-11-10T09:24:37.606598",
     "source": "NSE + Yahoo Finance + Screener.in + Trendlyne",
     "version": "v2",
     "is_live": true
   },
   "stress": {
-    "nifty_level": 25030.35,
-    "dd_ath_pct": 5.09,
-    "dd_52w_pct": 5.09,
-    "vix": 17.47,
-    "dist_200dma_pct": 4.3,
-    "pe_ratio": 27.46,
+    "nifty_level": 25044.65,
+    "dd_ath_pct": 5.04,
+    "dd_52w_pct": 5.04,
+    "vix": 17.42,
+    "dist_200dma_pct": 4.37,
+    "pe_ratio": 27.5,
     "pe_10y_avg": 22.5,
-    "pe_vs_avg_pct": 22.0
+    "pe_vs_avg_pct": 22.2
   },
   "breadth": {
     "ad_ratio": null,
@@ -22,25 +22,25 @@
     "pct_above_50dma": 87.2,
     "new_52w_highs": null,
     "new_52w_lows": null,
-    "momentum_gap_50dma": 7.67,
+    "momentum_gap_50dma": 7.65,
     "pcr": null,
     "max_pain": null,
     "options_expiry": null
   },
   "structure": {
     "nifty50": {
-      "level": 25030.35,
-      "dd_ath_pct": 5.09,
-      "dd_52w_pct": 5.09,
-      "dma200": 23998.93,
-      "dma50": 23248.02
+      "level": 25044.65,
+      "dd_ath_pct": 5.04,
+      "dd_52w_pct": 5.04,
+      "dma200": 23995.83,
+      "dma50": 23264.76
     },
     "midcap150": {
-      "level": 71657.8,
-      "dd_ath_pct": 8.03,
-      "dd_52w_pct": 4.46,
-      "dma200": 70002.23,
-      "dma50": 70419.09
+      "level": 72789.45,
+      "dd_ath_pct": 6.58,
+      "dd_52w_pct": 2.95,
+      "dma200": 70022.24,
+      "dma50": 70384.86
     },
     "smallcap250": {
       "level": 19185.05,
@@ -51,9 +51,9 @@
     }
   },
   "macro": {
-    "brent_usd": 91.45,
+    "brent_usd": 90.67,
     "us10y_yield": 4.86,
-    "dxy": 101.68,
+    "dxy": 101.66,
     "usdinr": 93.92,
     "fii_today_cr": null,
     "dii_today_cr": null,
@@ -62,11 +62,11 @@
   },
   "recovery": {
     "recent_low": 22363.35,
-    "rally_from_low_pct": 11.93,
+    "rally_from_low_pct": 11.99,
     "higher_low": true,
     "vix_trend": "Rising",
     "vix_peak": 17.47,
-    "rsi_weekly": 55.4,
-    "breadth_up_days": 1.6
+    "rsi_weekly": 54.0,
+    "breadth_up_days": 1.4
   }
 }
